@@ -13,6 +13,9 @@
 // else
 //     block all commands that produce actuation
 
+int started = 0;
+int lkas_prev = 0;
+
 static void gm_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
   // state machine to enter and exit controls
   uint32_t addr;
@@ -32,6 +35,17 @@ static void gm_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
       controls_allowed = 1;
     } else if (buttons == 6) {
       controls_allowed = 0;
+    }
+  }
+
+  // "start" the car by pressing LKAS button
+  if (addr == 481) {
+    int lkas = (to_push->RDLR >> 23) & 1;
+    if (lkas != lkas_prev) {
+      if (lkas) {
+        started = !started;
+      }
+      lkas_prev = lkas;
     }
   }
 

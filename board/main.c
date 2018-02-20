@@ -109,7 +109,7 @@ int get_health_pkt(void *dat) {
   health->started = (GPIOA->IDR & (1 << 1)) == 0;
 #else
   health->current = 0;
-  health->started = (GPIOC->IDR & (1 << 13)) != 0;
+  health->started = started; // (GPIOC->IDR & (1 << 13)) != 0;
 #endif
 
   health->controls_allowed = controls_allowed;
